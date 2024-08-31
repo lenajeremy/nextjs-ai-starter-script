@@ -19,7 +19,7 @@
   "author": "Jeremiah Lena",
   "license": "MIT",
   "dependencies": {
-    "inquirer": "^10.1.8",
+    "@inquirer/prompts": "^5.3.8",
     "simple-git": "^3.25.0"
   }
 }
