@@ -1,0 +1,25 @@
+{
+  "name": "nextjs-ai-script",
+  "version": "1.0.0",
+  "description": "Initialize a Next.js project with AI integration",
+  "main": "index.js",
+  "bin": {
+    "ai-next": "./index.js"
+  },
+  "scripts": {
+    "start": "node index.js"
+  },
+  "keywords": [
+    "nextjs",
+    "ai",
+    "script",
+    "starter",
+    "template"
+  ],
+  "author": "Jeremiah Lena",
+  "license": "MIT",
+  "dependencies": {
+    "inquirer": "^10.1.8",
+    "simple-git": "^3.25.0"
+  }
+}
