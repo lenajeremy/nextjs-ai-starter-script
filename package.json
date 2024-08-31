@@ -20,6 +20,7 @@
   "license": "MIT",
   "dependencies": {
     "@inquirer/prompts": "^5.3.8",
+    "ora": "^8.1.0",
     "simple-git": "^3.25.0"
   }
 }
