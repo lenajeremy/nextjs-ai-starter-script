@@ -6,6 +6,7 @@ const {
   processLLMSetupFile,
   processLLMChatRoute,
   installLLMPackages,
+  processEnvVariables,
 } = require("./utils");
 
 const TEMPLATE_REPOSITORY_URL =
@@ -24,7 +25,7 @@ async function main() {
   try {
     const projectName = await input({
       message: "What is the name of your project?",
-      required: true
+      required: true,
     });
 
     const aiProvider = await select({
@@ -67,7 +68,7 @@ async function main() {
         });
 
         githubSecret = await input({
-          message: "Enterm your Github App Secret",
+          message: "Enter your Github App Secret",
           default: "",
         });
       }
@@ -89,31 +90,48 @@ async function main() {
     });
 
     spinner.succeed("Template code retrieved successfully\n");
-    setupLLM(aiProvider, projectName, spinner);
+    setupLLM(
+      aiProvider,
+      {
+        projectName,
+        nextAuthSecret: "secret",
+        mailersendAPIKey: mailersendapiKey,
+        authGithubSecret: githubSecret,
+        authGithubID: githubId,
+        llmKey: llmkey,
+        databaseURL: dburl,
+        shouldInputEnv: inputEnvVariables,
+      },
+      spinner
+    );
   } catch (error) {
     console.error("An error occurred:", error);
   }
 }
 
-async function setupLLM(selectedLLM, projectName, spinner) {
-  const llmSetupFileURL = `${__dirname}/${projectName}/src/app/api/ai/setup.ts`;
-  const llmChatRouteURL = `${__dirname}/${projectName}/src/app/api/ai/chat/route.ts`;
+async function setupLLM(selectedLLM, details, spinner) {
+  const llmSetupFileURL = `${__dirname}/${details.projectName}/src/app/api/ai/setup.ts`;
+  const llmChatRouteURL = `${__dirname}/${details.projectName}/src/app/api/ai/chat/route.ts`;
+  const envFileURL = `${__dirname}/${details.projectName}/.env`;
 
   spinner.text = "Customizing template to match your project details\n";
   spinner.start();
   sleep();
   processLLMSetupFile(selectedLLM, llmSetupFileURL);
   processLLMChatRoute(selectedLLM, llmChatRouteURL);
-  processEnv()
+
+  if (details.shouldInputEnv) {
+    processEnvVariables(envFileURL, details);
+  }
   spinner.succeed("Customization completed");
 
   spinner.text = "Installing required packages\n";
-  spinner.start()
-  installLLMPackages(selectedLLM, projectName);
+  spinner.start();
+  installLLMPackages(selectedLLM, details.projectName);
   spinner.succeed("Packages installed successfully");
 
   console.log(
-    `\n\n project setup complete... run the following command: \ncd ${projectName} && npm run dev`
+    `\n\n project setup complete... run the following command: \ncd ${details.projectName} && npm run dev`
   );
 }
 

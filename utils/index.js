@@ -13,6 +13,8 @@ async function processLLMSetupFile(selectedLLM, fileURL) {
 
   if (selectedLLM === "google") {
     createProviderValue = "createGoogleGenerativeAI";
+  } else if (selectedLLM === 'openai') {
+    createProviderValue = "createOpenAI"
   }
   const apiProviderValue = `${selectedLLM.toLowerCase()}`;
 
@@ -109,15 +111,29 @@ function installLLMPackages(selectedLLM, projectName) {
 }
 
 function capitalize(str) {
-  return str.charAt(0).toUpperCase() + str.slice(1)
+  return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
-function processEnvVariables(selectedLLM, fileURL) {
-  
+async function processEnvVariables(fileURL, details) {
+  const template = `
+NEXTAUTH_SECRET="${details.nextAuthSecret || ""}"
+MAILERSEND_API_KEY="${details.mailersendAPIKey || ""}"
+AUTH_GITHUB_SECRET="${details.authGithubSecret || ""}"
+AUTH_GITHUB_ID="${details.authGithubID || ""}"
+LLM_KEY="${details.llmKey}"
+DATABASE_URL="${details.databaseURL}"
+`;
+
+  try {
+    await fs.writeFile(fileURL, template);
+  } catch (error) {
+    console.log("failed to write to file:", fileURL, "error:", error);
+  }
 }
 
 module.exports = {
   processLLMSetupFile,
   processLLMChatRoute,
   installLLMPackages,
+  processEnvVariables,
 };
