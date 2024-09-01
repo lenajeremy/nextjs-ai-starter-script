@@ -1,8 +1,18 @@
-this is meant to be an npm script to initialize a nextjs starter template. the script is going to use a package to get allow the user make choices from the command line. These are the steps to follow:
-1. user runs command something like `npx ai-next initialize`
-2. the script begins to run and asks the user for the name of the project they want to initialize. this is used to create a folder. 
-3. the command ask the user for the ai provider they want to use.
-3. upon selection, the script clones a branch of a particular repo on the user's device (the selected branch is deteermined by the selected ai provider)
-4. after the code has been cloned. you display a command to say "intialized completed... run `cd (project name)
+# AI-Next Starter Template
 
+AI-Next is a command-line tool to initialize a Next.js starter template with integrated AI capabilities. This project aims to simplify the process of setting up a Next.js project with your preferred AI provider.
 
+## Features
+
+- Easy initialization of a Next.js project
+- Integration with various AI providers
+- Customizable project setup
+
+## Prerequisites
+
+- Node.js (version 12 or higher)
+- npm (comes with Node.js)
+
+## Installation
+
+To use AI-Next, you don't need to install it globally. You can run it directly using npx:

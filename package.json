@@ -3,14 +3,12 @@
   "version": "1.0.0",
   "description": "Initialize a Next.js project with AI integration",
   "main": "index.ts",
-  "type": "module",
+  "type": "commonjs",
   "bin": {
-    "ai-next": "./index.ts"
+    "ai-next": "./index.js"
   },
   "scripts": {
-    "compile": "tsc && node build.cjs",
-    "start": "node dist/index.cjs",
-    "dev": "nodemon --watch '**/*.ts' --exec 'npm run compile && node dist/index.cjs'"
+    "dev": "nodemon index.js"
   },
   "keywords": [
     "nextjs",
@@ -26,9 +24,6 @@
     "ora": "^8.1.0"
   },
   "devDependencies": {
-    "@types/node": "^22.5.1",
-    "nodemon": "^3.1.4",
-    "ts-node": "^10.9.2",
-    "typescript": "^5.5.4"
+    "nodemon": "^3.1.4"
   }
 }

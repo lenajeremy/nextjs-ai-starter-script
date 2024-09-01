@@ -6,4 +6,3 @@ export type SetupValues = {
     llmApiKey?: string;
     databaseURL?: string;
   }
-  
