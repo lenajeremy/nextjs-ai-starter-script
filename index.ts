@@ -1,17 +1,10 @@
 #!/usr/bin/env node
-const { input, select, confirm: iqConfirm, checkbox } = require("@inquirer/prompts");
-const { simpleGit, CleanOptions } = require('simple-git');
-const fs = require("fs");
-const path = require("path");
-
-type SetupValues = {
-  projectName: string;
-  aiProvider: 'openai' | "anthropic" | "google gemini" | "mistralai";
-  inputEnvVariables: Boolean;
-  authProviders: ('email' | 'google' | 'github')[];
-  llmApiKey?: string;
-  databaseURL?: string;
-}
+import { input, select, confirm as iqConfirm, checkbox } from "@inquirer/prompts"
+import { execSync } from 'child_process'
+import { type SetupValues } from './utils/types'
+import { setupAIProvider } from './utils/llm'
+import fs from 'fs'
+import path from 'path'
 
 async function getSetupValues(): Promise<SetupValues> {
   const projectName = await input({
@@ -21,11 +14,11 @@ async function getSetupValues(): Promise<SetupValues> {
   const aiProvider = await select({
     message: "Which AI provider do you want to use?",
     choices: [
-      { value: "OpenAI" },
-      { value: "Anthropic" },
-      { value: "Gemini" },
-      { value: "MistralAI" },
-    ],
+      { name: "OpenAI", value: "openai" },
+      { name: "Anthropic", value: "anthropic" },
+      { name: "Gemini", value: "google gemini" },
+      { name: "MistralAI", value: "mistralai" },
+    ] as const,
   });
 
   const inputEnvVariables = await iqConfirm({
@@ -40,7 +33,7 @@ async function getSetupValues(): Promise<SetupValues> {
       { value: "github", name: "Github" },
       { value: "google", name: "Google" },
       { value: "email", name: "Email" },
-    ],
+    ] as const,
   });
 
   return {
@@ -53,15 +46,51 @@ async function getSetupValues(): Promise<SetupValues> {
   }
 }
 
-  (async function () {
-    console.log("Welcome....\n\n")
+function cloneRepo(projectName: string): boolean {
+  try {
+    execSync(`git clone https://github.com/lenajeremy/nextjs-ai-neon-starter ${projectName}`)
+    return true
+  } catch {
+    process.exit(0)
+  }
+}
+
+async function setupLLMConfigs() {
+setupAIProvider("from the index.ts file")
+
+}
+
+function setupEnvVariables(options: SetupValues) {
+
+}
+
+(async function () {
+  console.log("Welcome....\n\n")
+  const { default: ora } = await import("ora");
+  const spinner = ora()
+  console.log("hello babyyyyy")
+
+  try {
     // const setupValues = await getSetupValues()
+    const setupValues = {
+      projectName: 'testproject'
+    }
 
-    simpleGit().clean(CleanOptions.FORCE);
+    spinner.text = "Loading template..."
+    spinner.start()
+    // const isCloned = cloneRepo('hello')
+    spinner.succeed("Templated loaded successfully")
 
-    simpleGit().clone("https://github.com/lenajeremy/nextjs-ai-neon-starter", [])
+    spinner.text = "Setting up LLM configurations"
+    spinner.start()
+    setupLLMConfigs()
 
 
 
 
-  })()
+
+
+  } catch (error) {
+    process.exit(0)
+  }
+})()
