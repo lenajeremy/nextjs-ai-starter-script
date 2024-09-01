@@ -11,6 +11,6 @@
       "noEmit": false,
       "allowJs": true,
     },
-    "include": ["**/*.ts", "index.js", "utils/llm.js"],
+    "include": ["**/*.ts", "index.js", "utils/index.js"],
     "exclude": ["node_modules"],
   }

@@ -6,8 +6,7 @@ const {
   processLLMSetupFile,
   processLLMChatRoute,
   installLLMPackages,
-} = require("./utils/llm");
-const ora = require("ora").default;
+} = require("./utils");
 
 const TEMPLATE_REPOSITORY_URL =
   "https://github.com/lenajeremy/nextjs-ai-neon-starter";
@@ -20,9 +19,12 @@ const LLM_CHOICES = [
 ];
 
 async function main() {
+  const ora = (await import("ora")).default;
+
   try {
     const projectName = await input({
-      message: "what is the name of your project?",
+      message: "What is the name of your project?",
+      required: true
     });
 
     const aiProvider = await select({
@@ -78,13 +80,15 @@ async function main() {
 
     const spinner = ora();
 
-    spinner.text = "Fetching template code...";
+    spinner.text = "Fetching template code...\n";
     spinner.start();
 
     // clone the repo into the provided folder
-    execSync(`git clone ${TEMPLATE_REPOSITORY_URL} ${projectName}`);
+    execSync(`git clone ${TEMPLATE_REPOSITORY_URL} ${projectName}`, {
+      stdio: ["ignore", "ignore", "pipe"],
+    });
 
-    spinner.succeed("Template code retrieved successfully");
+    spinner.succeed("Template code retrieved successfully\n");
     setupLLM(aiProvider, projectName, spinner);
   } catch (error) {
     console.error("An error occurred:", error);
@@ -95,18 +99,22 @@ async function setupLLM(selectedLLM, projectName, spinner) {
   const llmSetupFileURL = `${__dirname}/${projectName}/src/app/api/ai/setup.ts`;
   const llmChatRouteURL = `${__dirname}/${projectName}/src/app/api/ai/chat/route.ts`;
 
-  spinner.text = "Customizing template to match your project details";
+  spinner.text = "Customizing template to match your project details\n";
   spinner.start();
-  sleep()
+  sleep();
   processLLMSetupFile(selectedLLM, llmSetupFileURL);
   processLLMChatRoute(selectedLLM, llmChatRouteURL);
-  spinner.succeed("customization completed")
+  processEnv()
+  spinner.succeed("Customization completed");
 
-  spinner.text = "installing required packages"
+  spinner.text = "Installing required packages\n";
+  spinner.start()
   installLLMPackages(selectedLLM, projectName);
-  spinner.succeed("packages installed successfully")
+  spinner.succeed("Packages installed successfully");
 
-  console.log(`\n\n project setup complete... run the following command: \ncd ${projectName} && npm run dev`)
+  console.log(
+    `\n\n project setup complete... run the following command: \ncd ${projectName} && npm run dev`
+  );
 }
 
 function sleep() {
@@ -116,68 +124,3 @@ function sleep() {
 }
 
 main();
-
-//   const databaseURL = await input({ message: "NEONDB DATABASE URL" });
-//   const llmApiKey = await input({ message: "API key for selected LLM" });
-//   const authProviders = await checkbox({
-//     message: "Select the auth providers you want to use",
-//     choices: [
-//       { value: "github", name: "Github" },
-//       { value: "google", name: "Google" },
-//       { value: "email", name: "Email" },
-//     ] as const,
-//   });
-
-//   return {
-//     projectName,
-//     aiProvider,
-//     databaseURL,
-//     llmApiKey,
-//     authProviders,
-//     inputEnvVariables
-//   }
-// }
-
-// function cloneRepo(projectName: string): boolean {
-//   try {
-//     execSync(`git clone https://github.com/lenajeremy/nextjs-ai-neon-starter ${projectName}`)
-//     return true
-//   } catch {
-//     process.exit(0)
-//   }
-// }
-
-// async function setupLLMConfigs() {
-// setupAIProvider("from the index.ts file")
-
-// }
-
-// function setupEnvVariables(options: SetupValues) {
-
-// }
-
-// (async function () {
-//   console.log("Welcome....\n\n")
-//   const { default: ora } = await import("ora");
-//   const spinner = ora()
-//   console.log("hello babyyyyy")
-
-//   try {
-//     // const setupValues = await getSetupValues()
-//     const setupValues = {
-//       projectName: 'testproject'
-//     }
-
-//     spinner.text = "Loading template..."
-//     spinner.start()
-//     // const isCloned = cloneRepo('hello')
-//     spinner.succeed("Templated loaded successfully")
-
-//     spinner.text = "Setting up LLM configurations"
-//     spinner.start()
-//     setupLLMConfigs()
-
-//   } catch (error) {
-//     process.exit(0)
-//   }
-// })()

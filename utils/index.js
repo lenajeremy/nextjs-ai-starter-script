@@ -1,6 +1,5 @@
 const fs = require("node:fs/promises");
 const path = require("path");
-const { capitalize } = require("./others");
 const { execSync } = require("node:child_process");
 
 /**
@@ -12,8 +11,8 @@ const { execSync } = require("node:child_process");
 async function processLLMSetupFile(selectedLLM, fileURL) {
   let createProviderValue = `create${capitalize(selectedLLM.toLowerCase())}`;
 
-  if (selectedLLM === 'google') {
-    createProviderValue = 'createGoogleGenerativeAI'
+  if (selectedLLM === "google") {
+    createProviderValue = "createGoogleGenerativeAI";
   }
   const apiProviderValue = `${selectedLLM.toLowerCase()}`;
 
@@ -39,8 +38,8 @@ async function processLLMChatRoute(selectedLLM, fileURL) {
     openai: "gpt-4o-2024-08-06",
     anthropic: "claude-3-5-sonnet-20240620",
     google: "gemini-1.5-pro-latest",
-    mistral: "mistral-large-latest"
-  }
+    mistral: "mistral-large-latest",
+  };
 
   const template = `
 import { streamText, convertToCoreMessages } from 'ai'
@@ -77,37 +76,44 @@ export async function POST(request: Request) {
     });
 
     const result = await streamText({
-        model: ${selectedLLM.toLowerCase()}("${defaultModelForLLM[selectedLLM.toLowerCase()]}", { cacheControl: true }),
+        model: ${selectedLLM.toLowerCase()}("${
+    defaultModelForLLM[selectedLLM.toLowerCase()]
+  }", { cacheControl: true }),
         messages: convertToCoreMessages(messages)
     })
 
     return result.toDataStreamResponse()
 }
-`
+`;
 
-try {
-  await fs.writeFile(fileURL, template);
-} catch (error) {
-  throw new Error("failed to write into file from", fileURL);
-}
-
-
+  try {
+    await fs.writeFile(fileURL, template);
+  } catch (error) {
+    throw new Error("failed to write into file from", fileURL);
+  }
 }
 
 function installLLMPackages(selectedLLM, projectName) {
   try {
     const options = {
       cwd: path.join(process.cwd(), projectName),
-      stdio: "inherit",
+      stdio: ["ignore", "ignore", "pipe"],
     };
     execSync(`npm i @ai-sdk/${selectedLLM}`, options);
-    console.log("Package installed successfully");
   } catch (error) {
     console.error("Error installing package:", error.message);
     console.error("Command:", error.cmd);
     console.error("Working directory:", error.cwd);
     throw error;
   }
+}
+
+function capitalize(str) {
+  return str.charAt(0).toUpperCase() + str.slice(1)
+}
+
+function processEnvVariables(selectedLLM, fileURL) {
+  
 }
 
 module.exports = {
