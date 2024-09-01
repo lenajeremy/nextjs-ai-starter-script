@@ -5,7 +5,7 @@
   "main": "index.ts",
   "type": "commonjs",
   "bin": {
-    "ai-next": "./index.js"
+    "ai-next": "index.js"
   },
   "scripts": {
     "dev": "nodemon index.js"
