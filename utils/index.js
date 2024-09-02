@@ -13,8 +13,8 @@ async function processLLMSetupFile(selectedLLM, fileURL) {
 
   if (selectedLLM === "google") {
     createProviderValue = "createGoogleGenerativeAI";
-  } else if (selectedLLM === 'openai') {
-    createProviderValue = "createOpenAI"
+  } else if (selectedLLM === "openai") {
+    createProviderValue = "createOpenAI";
   }
   const apiProviderValue = `${selectedLLM.toLowerCase()}`;
 
@@ -87,7 +87,6 @@ export async function POST(request: Request) {
     return result.toDataStreamResponse()
 }
 `;
-
   try {
     await fs.writeFile(fileURL, template);
   } catch (error) {
