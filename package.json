@@ -1,6 +1,6 @@
 {
   "name": "neondb-ai-next",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Initialize a Next.js project with AI integration",
   "main": "index.ts",
   "type": "commonjs",
