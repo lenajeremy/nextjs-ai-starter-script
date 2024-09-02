@@ -45,7 +45,7 @@ async function processLLMChatRoute(selectedLLM, fileURL) {
 
   const template = `
 import { streamText, convertToCoreMessages } from 'ai'
-import { ${selectedLLM.toLowerCase()} } from '../setup'
+import ${selectedLLM.toLowerCase()} from '../setup'
 import { prisma } from '@/prisma'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/auth'
@@ -80,7 +80,7 @@ export async function POST(request: Request) {
     const result = await streamText({
         model: ${selectedLLM.toLowerCase()}("${
     defaultModelForLLM[selectedLLM.toLowerCase()]
-  }", { cacheControl: true }),
+  }"),
         messages: convertToCoreMessages(messages)
     })
 
