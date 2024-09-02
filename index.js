@@ -8,6 +8,7 @@ const {
   installLLMPackages,
   processEnvVariables,
 } = require("./utils");
+const figlet = require("figlet")
 
 const TEMPLATE_REPOSITORY_URL =
   "https://github.com/lenajeremy/nextjs-ai-neon-starter";
@@ -21,6 +22,17 @@ const LLM_CHOICES = [
 
 async function main() {
   const ora = (await import("ora")).default;
+
+  figlet("NeonChat", function (err, data) {
+    if (err) {
+      console.log("Something went wrong...");
+      console.dir(err);
+      return;
+    }
+    console.log(data);
+  });
+
+  await sleep(200)
 
   try {
     const projectName = await input({
@@ -110,8 +122,12 @@ async function main() {
 }
 
 async function setupLLM(selectedLLM, details, spinner) {
-  const llmSetupFileURL = `${process.cwd()}/${details.projectName}/src/app/api/ai/setup.ts`;
-  const llmChatRouteURL = `${process.cwd()}/${details.projectName}/src/app/api/ai/chat/route.ts`;
+  const llmSetupFileURL = `${process.cwd()}/${
+    details.projectName
+  }/src/app/api/ai/setup.ts`;
+  const llmChatRouteURL = `${process.cwd()}/${
+    details.projectName
+  }/src/app/api/ai/chat/route.ts`;
   const envFileURL = `${process.cwd()}/${details.projectName}/.env`;
 
   spinner.text = "Customizing template to match your project details\n";
@@ -135,9 +151,9 @@ async function setupLLM(selectedLLM, details, spinner) {
   );
 }
 
-function sleep() {
+function sleep(ms) {
   return new Promise((res) => {
-    setTimeout(res, 2000);
+    setTimeout(res, ms || 2000);
   });
 }
 

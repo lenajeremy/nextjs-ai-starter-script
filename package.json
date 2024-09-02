@@ -1,6 +1,6 @@
 {
-  "name": "neondb-ai-next",
-  "version": "1.0.3",
+  "name": "neonchat",
+  "version": "1.0.0",
   "description": "Initialize a Next.js project with AI integration",
   "main": "index.ts",
   "type": "commonjs",
@@ -21,6 +21,7 @@
   "license": "MIT",
   "dependencies": {
     "@inquirer/prompts": "^5.3.8",
+    "figlet": "^1.7.0",
     "ora": "^8.1.0"
   },
   "devDependencies": {
