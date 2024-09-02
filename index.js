@@ -110,9 +110,9 @@ async function main() {
 }
 
 async function setupLLM(selectedLLM, details, spinner) {
-  const llmSetupFileURL = `${__dirname}/${details.projectName}/src/app/api/ai/setup.ts`;
-  const llmChatRouteURL = `${__dirname}/${details.projectName}/src/app/api/ai/chat/route.ts`;
-  const envFileURL = `${__dirname}/${details.projectName}/.env`;
+  const llmSetupFileURL = `${process.cwd()}/${details.projectName}/src/app/api/ai/setup.ts`;
+  const llmChatRouteURL = `${process.cwd()}/${details.projectName}/src/app/api/ai/chat/route.ts`;
+  const envFileURL = `${process.cwd()}/${details.projectName}/.env`;
 
   spinner.text = "Customizing template to match your project details\n";
   spinner.start();
